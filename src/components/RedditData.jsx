@@ -4,12 +4,16 @@ import { AiFillRedditCircle } from "react-icons/ai";
 import { ImNewTab } from "react-icons/im";
 import { IoMedalOutline } from "react-icons/io5";
 import { SpinnerDiamond } from "spinners-react";
+import { FaSearch } from "react-icons/fa";
+import { FaLightbulb } from "react-icons/fa";
 
 function RedditData() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isTruncate, setIsTruncate] = useState({});
+  const [search, setSearch] = useState("");
+  const [theme, setTheme] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -42,8 +46,22 @@ function RedditData() {
   //   }));
   // };
 
+  function searchIt() {
+    return data.filter((ele) =>
+      ele.data.title.toLowerCase().includes(search.toLowerCase())
+    );
+  }
+
+  function toggleTheme() {
+    setTheme(!theme);
+  }
+
   return (
-    <div className="w-100 my-0 p-3 bg-gray-200 sm:mx-5 md:mx-15 lg:mx-30 xl:mx-40 2xl:mx-60">
+    <div
+      className={`${
+        theme ? "bg-gray-900 text-white" : "bg-gray-100 text-black"
+      } w-96 sm:w-200 md:w-240 lg:w-302 xl:w-360 2xl:w-380 min-h-screen`}
+    >
       {loading && (
         <div className="flex items-center justify-center w-100 h-screen 2xl:mx-75">
           <SpinnerDiamond
@@ -61,58 +79,98 @@ function RedditData() {
           <p className="text-2xl text-red-500">Error: {error.message}</p>
         </div>
       )}
-      {data.map((ele) => {
-        const postId = ele.data.id;
-        const Text = decodeHTML(ele.data.selftext_html);
-        const maxLength = 300;
-        const truncatedText =
-          Text.length > maxLength ? Text.substring(0, maxLength) + "..." : Text;
-        const isPostTruncated = isTruncate[postId] ?? true;
-
-        return (
+      {data && (
+        // <div className="w-full">
+        <>
           <div
-            key={postId}
-            className="justify-center border mx-5 mb-10 p-10 bg-gray-800 text-gray-300 rounded-xl ring sm:w-6xl md:w-xl lg:w-2xl xl:w-5xl 2xl:w-5xl 2xl:p-10"
+            className={` ${
+              theme ? "bg-gray-800 text-white" : "bg-gray-300 text-black"
+            }, flex justify-between items-center w-95 md:w-240 lg:w-300 xl:w-360 2xl:w-380`}
           >
-            <h1 className="font-bold text-2xl w-full">{ele.data.title}</h1>
-            <div className="flex items-center">
-              {ele.data.thumbnail && ele.data.thumbnail !== "self" ? (
-                <img
-                  src={ele.data.thumbnail}
-                  alt="Thumbnail"
-                  className="border rounded-full w-10 h-10 m-2 mt-4"
-                />
-              ) : (
-                <AiFillRedditCircle className="w-10 h-10 m-2 text-red-500" />
-              )}
-              <p className="font-bold text-lg ml-2 mt-1">
-                {ele.data.author_fullname}
-              </p>
+            <div className="justify-left w-70 p-2 ml-3 2xl:ml-20 sm:w-100 md:w-300 lg:w-320 xl:w-360 2xl:w-250 relative">
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className={`${
+                  theme ? "text-black" : "text-white"
+                }, border p-2 pl-10 rounded-2xl w-70`}
+                placeholder="Search for reddit post"
+              />
+              <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500" />
             </div>
-            <div className="flex flex-row justify-between my-2">
-              <div className="flex flex-row">
-                <IoMedalOutline size={20} className="mt-1" />
-                <p className="ml-3">{ele.data.score}</p>
-              </div>
-              <a
-                href={ele.data.url}
-                className="py-2 text-sm flex items-center text-blue-500"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <ImNewTab className="mr-1" /> Go to
-              </a>
+            <div className="mr-5 xl:mr-10 2xl:mr-10">
+              <button onClick={toggleTheme}>
+                {theme ? (
+                  <FaLightbulb color={"gray"} size={20} />
+                ) : (
+                  <FaLightbulb color={"yellow"} size={20} />
+                )}
+              </button>
             </div>
+          </div>
+          <div className="grid mt-10 m-1 sm:grid-cols-1 sm:w-100 sm:mx-0 lg:grid-cols-3 lg:w-300 lg:mx-2 md:grid-cols-2 md:w-240 md:mx:20 xl:grid-cols-3 xl:w-350 xl:mx-5 2xl:grid-cols-3 2xl:w-350 2xl:mx-20 ">
+            {searchIt().map((ele) => {
+              const postId = ele.data.id;
+              const Text = decodeHTML(ele.data.selftext_html);
+              const maxLength = 300;
+              const truncatedText =
+                Text.length > maxLength
+                  ? Text.substring(0, maxLength) + "..."
+                  : Text;
+              const isPostTruncated = isTruncate[postId] ?? true;
 
-            {ele.data.selftext_html && (
-              <>
+              return (
                 <div
-                  dangerouslySetInnerHTML={{
-                    __html: isPostTruncated && truncatedText,
-                  }}
-                  className="text-gray-400 text-justify overflow-auto"
-                />
-                {/* {Text.length > maxLength && (
+                  key={postId}
+                  className={`${
+                    theme
+                      ? "bg-gray-800 text-gray-300 border-black"
+                      : "bg-gray-100 text-gray-800 border-black"
+                  }, justify-center h-auto w-90 m-3 mb-10 p-10 rounded-xl ring sm:w-lg md:w-md lg:w-sm xl:w-md 2xl:w:2xl`}
+                >
+                  <h1 className="font-bold text-2xl w-full">
+                    {ele.data.title}
+                  </h1>
+                  <div className="flex items-center">
+                    {ele.data.thumbnail && ele.data.thumbnail !== "self" ? (
+                      <img
+                        src={ele.data.thumbnail}
+                        alt="Thumbnail"
+                        className="border rounded-full w-10 h-10 m-2 mt-4"
+                      />
+                    ) : (
+                      <AiFillRedditCircle className="w-10 h-10 m-2 text-red-500" />
+                    )}
+                    <p className="font-bold text-lg ml-2 mt-1">
+                      {ele.data.author_fullname}
+                    </p>
+                  </div>
+                  <div className="flex flex-row justify-between my-2">
+                    <div className="flex flex-row">
+                      <IoMedalOutline size={20} className="mt-1" />
+                      <p className="ml-3">{ele.data.score}</p>
+                    </div>
+                    <a
+                      href={ele.data.url}
+                      className="py-2 text-sm flex items-center text-blue-500"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <ImNewTab className="mr-1" /> Go to
+                    </a>
+                  </div>
+
+                  {ele.data.selftext_html && (
+                    <>
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: isPostTruncated && truncatedText,
+                        }}
+                        className={`${
+                          theme ? "text-gray-700" : "text-gray-900"
+                        }, text-justify overflow-auto`}
+                      />
+                      {/* {Text.length > maxLength && (
                   <button
                     onClick={(e) => {
                       e.preventDefault();
@@ -126,16 +184,19 @@ function RedditData() {
                     </span>
                   </button>
                 )} */}
-                {Text.length > maxLength && (
-                  <p className="text-red-300 text-sm my-2">
-                    [ Please click on "go to" button to read all ]
-                  </p>
-                )}
-              </>
-            )}
+                      {Text.length > maxLength && (
+                        <p className="text-red-300 text-sm my-2">
+                          [ Please click on "go to" button to read all ]
+                        </p>
+                      )}
+                    </>
+                  )}
+                </div>
+              );
+            })}
           </div>
-        );
-      })}
+        </>
+      )}
     </div>
   );
 }
