@@ -117,7 +117,7 @@ function RedditData() {
               </button>
             </div>
           </div>
-          <div className="grid mt-10 m-1 sm:grid-cols-1 sm:w-100 sm:mx-0 lg:grid-cols-3 lg:w-300 lg:mx-2 md:grid-cols-2 md:w-240 md:mx:20 xl:grid-cols-3 xl:w-350 xl:mx-5 2xl:grid-cols-3 2xl:w-350 2xl:mx-20 ">
+          <div className="border grid mt-10 m-1 sm:grid-cols-1 sm:w-100 sm:mx-0 lg:grid-cols-3 lg:w-300 lg:mx-2 md:grid-cols-2 md:w-240 md:mx:20 xl:grid-cols-3 xl:w-350 xl:mx-5 2xl:grid-cols-3 2xl:w-350 2xl:mx-20 ">
             {searchIt().map((ele) => {
               const postId = ele.data.id;
               const Text = decodeHTML(ele.data.selftext_html);
@@ -135,7 +135,7 @@ function RedditData() {
                     theme
                       ? "bg-gray-800 text-gray-300 border-black"
                       : "bg-gray-100 text-gray-800 border-black"
-                  }, justify-center h-auto w-90 m-3 mb-10 p-10 rounded-xl ring sm:w-lg md:w-md lg:w-sm xl:w-md 2xl:w:2xl`}
+                  }, justify-center h-auto w-90 m-3 mb-10 p-10 border rounded-xl ring sm:w-lg md:w-md lg:w-sm xl:w-md 2xl:w:2xl`}
                 >
                   <h1 className="font-bold text-2xl w-full">
                     {ele.data.title}
