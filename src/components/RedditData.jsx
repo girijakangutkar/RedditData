@@ -19,6 +19,13 @@ function RedditData() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      setTheme(savedTheme === "dark");
+    }
+  }, []);
+
   const url = import.meta.env.VITE_URI;
   async function fetchData() {
     setLoading(true);
@@ -53,7 +60,9 @@ function RedditData() {
   }
 
   function toggleTheme() {
-    setTheme(!theme);
+    const newTheme = !theme;
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme ? "dark" : "light");
   }
 
   return (
