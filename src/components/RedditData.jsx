@@ -88,7 +88,7 @@ function RedditData() {
           <p className="text-2xl text-red-500">Error: {error.message}</p>
         </div>
       )}
-      {data && (
+      {!loading && (
         // <div className="w-full">
         <>
           <div
@@ -133,9 +133,9 @@ function RedditData() {
                   key={postId}
                   className={`${
                     theme
-                      ? "bg-gray-800 text-gray-300 border-white"
-                      : "bg-gray-100 text-gray-800 border-black"
-                  }, justify-center h-auto w-90 m-3 mb-10 p-10 rounded-xl ring sm:w-lg md:w-md lg:w-sm xl:w-md 2xl:w:2xl`}
+                      ? "bg-gray-800 text-gray-300"
+                      : "bg-gray-100 text-gray-800"
+                  }, border justify-center h-auto w-90 m-3 mb-10 p-10 rounded-xl ring sm:w-lg md:w-md lg:w-sm xl:w-md 2xl:w:2xl`}
                 >
                   <h1 className="font-bold text-2xl w-full">
                     {ele.data.title}
